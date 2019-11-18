@@ -1,0 +1,121 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
+    "contentVersion": "1.0.0.1",
+    "parameters": {
+        "rgName": {
+            "type": "string",
+            "defaultValue": "adatum-demo-function-rg"
+        },
+        "rgLocation": {
+            "type": "string",
+            "defaultValue": "North Europe"
+        },
+        "functionName": {
+            "type": "String",
+            "defaultValue": "adatum-demo-func"
+        }
+    },
+    "variables": {
+        "storageName": "[concat(toLower(parameters('functionName')), uniqueString(resourceGroup().id))]"
+    },
+    "resources": [
+        {
+            "type": "Microsoft.Resources/resourceGroups",
+            "apiVersion": "2018-05-01",
+            "location": "[parameters('rgLocation')]",
+            "name": "[parameters('rgName')]",
+            "properties": {}
+        },
+
+                {
+                    "type": "Microsoft.Resources/deployments",
+                    "apiVersion": "2018-05-01",
+                    "name": "functionDemoDeployment",
+                    "resourceGroup": "[parameters('rgName')]",
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Resources/resourceGroups/', parameters('rgName'))]"
+                    ],
+                    "properties": {
+                        "mode": "Incremental",
+                        "template": {
+                            "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+                            "contentVersion": "1.0.0.0",
+                            "parameters": {},
+                            "variables": {},
+                            "resources": [
+                                        {
+                                            "type": "Microsoft.Web/sites",
+                                            "kind": "functionapp",
+                                            "name": "[parameters('functionName')]",
+                                            "apiVersion": "2016-03-01",
+                                            "location": "[parameters('rgLocation')]",
+                                            "properties": {
+                                                "siteConfig": {
+                                                    "appSettings": [
+                                                        {
+                                                            "name": "FUNCTIONS_WORKER_RUNTIME",
+                                                            "value": "dotnet"
+                                                        },
+                                                        {
+                                                            "name": "AzureWebJobsStorage",
+                                                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+                                                        },
+                                                        {
+                                                            "name": "FUNCTIONS_EXTENSION_VERSION",
+                                                            "value": "~2"
+                                                        },
+                                                        {
+                                                            "name": "WEBSITE_CONTENTAZUREFILECONNECTIONSTRING",
+                                                            "value": "[concat('DefaultEndpointsProtocol=https;AccountName=',variables('storageName'),';AccountKey=',listKeys(resourceId('Microsoft.Storage/storageAccounts', parameters('storageName')), '2015-05-01-preview').key1)]"
+                                                        },
+                                                        {
+                                                            "name": "WEBSITE_CONTENTSHARE",
+                                                            "value": "[concat(toLower(parameters('name')), 'aabc')]"
+                                                        },
+                                                        {
+                                                            "name": "WEBSITE_NODE_DEFAULT_VERSION",
+                                                            "value": "10.14.1"
+                                                        },
+                                                        {
+                                                            "name": "APPINSIGHTS_INSTRUMENTATIONKEY",
+                                                            "value": "[reference('microsoft.insights/components/903874yrewfoi', '2015-05-01').InstrumentationKey]"
+                                                        }
+                                                    ]
+                                                },
+                                                "name": "[parameters('name')]",
+                                                "clientAffinityEnabled": false,
+                                                "reserved": false
+                                            },
+                                            "dependsOn": [
+                                                "[resourceId('Microsoft.Storage/storageAccounts', variables('storageName'))]",
+                                                "microsoft.insights/components/903874yrewfoi"
+                                            ]
+                                        },
+                                        {
+                                            "type": "Microsoft.Storage/storageAccounts",
+                                            "name": "[variables('storageName')]",
+                                            "apiVersion": "2015-05-01-preview",
+                                            "location": "[resourceGroup().location]",
+                                            "properties": {
+                                                "accountType": "Standard_LRS"
+                                            }
+                                        },
+                                        {
+                                            "type": "microsoft.insights/components",
+                                            "name": "903874yrewfoi",
+                                            "apiVersion": "2015-05-01",
+                                            "location": "[resourceGroup().location]",
+                                            "properties": {
+                                                "ApplicationId": "[parameters('name')]",
+                                                "Request_Source": "IbizaWebAppExtensionCreate"
+                                            }
+                                        }
+                        ],
+
+                "outputs": {}
+                }
+            }
+        }
+    ],
+"outputs": {}
+}
