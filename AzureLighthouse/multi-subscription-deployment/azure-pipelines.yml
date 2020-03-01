@@ -1,0 +1,55 @@
+trigger:
+- master
+
+variables:
+  # Agent VM image name
+  vmImageName: 'windows-2019'
+
+  # service connection (azure)
+  azureServiceConnection: 'Azure Lighthouse service connection name'
+
+  # you can chose to add this in the GUI
+  customerSubscriptionId: 'ALL'
+
+stages:
+  - stage: Build
+    displayName: copy files (build)
+
+    jobs:
+    - job: Build
+      displayName: Build
+      pool:
+        vmImage: $(vmImageName)
+      
+      steps:
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.SourcesDirectory)'
+          artifact: 'drop'
+          publishLocation: 'pipeline'
+  
+  - stage: Deploy
+    displayName: 'Deploy stage'
+    dependsOn: Build
+    jobs:
+    - deployment: DeployResources
+      displayName: 'Deploying Az resources'
+      pool:
+        vmImage: $(vmImageName)
+      environment: $(customerSubscriptionId)
+
+      strategy:
+        runOnce:
+          deploy:
+            steps:
+            - task: AzurePowerShell@4
+              displayName: 'Demo storage account'
+              enabled: false
+              inputs:
+                azureSubscription: '$(azureServiceConnection)'
+                ScriptType: 'FilePath'
+                ScriptPath: '$(Pipeline.Workspace)/drop/ARM-Templates/storage-account/deploy.ps1'
+                ScriptArguments: '-subscriptionId $(customerSubscriptionId)'
+                azurePowerShellVersion: 'LatestVersion'
+                workingDirectory: '$(Pipeline.Workspace)/drop/'
+                pwsh: true
