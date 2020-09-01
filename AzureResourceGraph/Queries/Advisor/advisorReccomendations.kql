@@ -1,6 +1,14 @@
 //Get advisor recommendations grouped by subscription, rg and category
-
 advisorresources
 | where type == "microsoft.advisor/recommendations"
 | extend parsedProp = parse_json(properties)
 | summarize count() by subscriptionId, resourceGroup, category=tostring(parsedProp.category)
+
+//get all advisor recommendations and extract key fields
+advisorresources
+| where type == "microsoft.advisor/recommendations"
+| extend parsedProp = parse_json(properties)
+| project subscriptionId, resourceGroup, 
+impact=tostring(parsedProp.impact), category=tostring(parsedProp.category), 
+resource=tostring(parsedProp.resourceMetadata.resourceId),
+problem=tostring(parsedProp.shortDescription.problem), updated=tostring(parsedProp.lastUpdated)
