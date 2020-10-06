@@ -1,0 +1,59 @@
+  "data": {
+    "authorization": {
+      "action": "Microsoft.Resources/subscriptions/resourceGroups/write",
+      "scope": "/subscriptions/****************************/resourceGroups/new",
+      "evidence": {
+        "role": "Subscription Admin"
+      }
+    },
+    "httpRequest": {
+      "clientIpAddress": "188.95.246.186",
+      "method": "PUT",
+      "url": "https://management.azure.com/subscriptions/****************************/resourceGroups/new?api-version=2014-04-01-preview",
+      "clientRequestId": "****************************"
+    },
+    "subscriptionId": "****************************",
+    "tenantId": "****************************",
+    "resourceProvider": "Microsoft.Resources",
+    "resourceUri": "/subscriptions/****************************/resourceGroups/new",
+    "operationName": "Microsoft.Resources/subscriptions/resourceGroups/write",
+    "correlationId": "5a047db0-35a8-4bd1-b8f4-b738ecfd4c09",
+    "status": "Succeeded",
+    "claims": {
+      "ver": "1.0",
+      "aio": "****************************",
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name": "live.com#firstname@lastname.com",
+      "iat": "1580222229",
+      "http://schemas.microsoft.com/identity/claims/identityprovider": "live.com",
+      "http://schemas.microsoft.com/identity/claims/tenantid": "****************************",
+      "http://schemas.microsoft.com/identity/claims/objectidentifier": "****************************",
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress": "firstname@lastname.onmicrosoft.com",
+      "nbf": "1580222229",
+      "http://schemas.microsoft.com/claims/authnclassreference": "1",
+      "ipaddr": "188.95.246.186",
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname": "Last",
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier": "****************************",
+      "uti": "c63sznnDxkCtGLm-RKUkAA",
+      "puid": "10032000392FD30D",
+      "aud": "https://management.core.windows.net/",
+      "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/givenname": "First",
+      "exp": "1580226129",
+      "iss": "https://sts.windows.net/e5806cb5-f8f4-4418-97e7-85ac12b58aa6/",
+      "http://schemas.microsoft.com/identity/claims/scope": "user_impersonation",
+      "name": "First Last",
+      "wids": "****************************",
+      "groups": "****************************",
+      "appidacr": "2",
+      "altsecid": "1:live.com:00037FFE8A5B0266",
+      "appid": "c44b4083-3bb0-49c1-b47d-974e53cbdf3c",
+      "http://schemas.microsoft.com/claims/authnmethodsreferences": "pwd"
+    }
+  },
+  "eventType": "Microsoft.Resources.ResourceWriteSuccess",
+  "subject": "/subscriptions/****************************/resourceGroups/new",
+  "topic": "/subscriptions/****************************",
+  "dataVersion": "2",
+  "metadataVersion": "1",
+  "eventTime": "2020-01-28T15:12:52.6521444Z",
+  "id": "df0d9739-9aea-4633-8726-eaa41772c457"
+}
