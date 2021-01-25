@@ -1,0 +1,11 @@
+// get resources by type without tag
+// change the resource types and tag to fit your environment
+// join resource containers to get sub name
+
+resources
+| join kind=leftouter 
+(ResourceContainers | where type=='microsoft.resources/subscriptions' | project SubName=name, subscriptionId) on subscriptionId
+| where type in~ ('Microsoft.DocumentDB/databaseAccounts', 'microsoft.sql/servers/databases', 'microsoft.dbforpostgresql/servers',
+'Microsoft.Cache/Redis', 'Microsoft.Compute/disks', 'Microsoft.Storage/storageAccounts')
+| where tags !contains 'your-tag-key'
+| project name, SubName, resourceGroup, type

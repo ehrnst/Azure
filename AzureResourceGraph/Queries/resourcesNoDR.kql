@@ -1,0 +1,26 @@
+// a few queries to find resources without any replication
+
+// sql
+resources
+| join kind=leftouter 
+(ResourceContainers | where type=='microsoft.resources/subscriptions' | project SubName=name, subscriptionId) on subscriptionId
+| where type =~ 'microsoft.sql/servers/databases'
+| where name notcontains 'master'
+| where properties.zoneRedundant =~ 'false'
+| project name, SubName, resourceGroup, tags
+
+// postgres
+resources
+| join kind=leftouter 
+(ResourceContainers | where type=='microsoft.resources/subscriptions' | project SubName=name, subscriptionId) on subscriptionId
+| where type =~ 'microsoft.dbforpostgresql/servers'
+| where properties.storageProfile.geoRedundantBackup =~ 'disabled'
+| project name, SubName, resourceGroup, tags
+
+// cosmosDB
+resources
+| join kind=leftouter 
+(ResourceContainers | where type=='microsoft.resources/subscriptions' | project SubName=name, subscriptionId) on subscriptionId
+| where type =~ 'Microsoft.DocumentDB/databaseAccounts'
+| where properties.enableMultipleWriteLocations =~ 'false'
+| project name, SubName, resourceGroup, tags, failoverEnabled = properties.enableAutomaticFailover
