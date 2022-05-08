@@ -4,10 +4,10 @@
 		{
 			"type": "func",
 			"command": "host start",
-			"problemMatcher": "$func-watch",
+			"problemMatcher": "$func-powershell-watch",
 			"isBackground": true,
 			"options": {
-				"cwd": "${workspaceFolder}/AzureFunctions\\Azure-Function-Event-Automation"
+				"cwd": "${workspaceFolder}/AzureFunctions\\Azure-Function-AAD-automation"
 			}
 		}
 	]
